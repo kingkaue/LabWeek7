@@ -12,12 +12,14 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rbTarget = point1.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 direction = (rbTarget - rb.position).normalized;
+        Debug.DrawRay(rb.position, direction * 2, Color.magenta);
         rb.linearVelocity = direction * speed;
         if (Vector3.Distance(rb.position, rbTarget) < 0.5f)
         {
