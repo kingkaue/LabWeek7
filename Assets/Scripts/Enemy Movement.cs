@@ -29,7 +29,7 @@ public class EnemyMovement : MonoBehaviour
             rbTarget = (rbTarget == point1.transform.position) ? point2.transform.position : point1.transform.position;
         }
 
-        //Interaction with player
+        /*//Interaction with player
         gameObject.transform.forward = direction;
         Vector3 toTarget = player.transform.position - gameObject.transform.position;
         Vector3 forward = gameObject.transform.forward;
@@ -38,6 +38,23 @@ public class EnemyMovement : MonoBehaviour
         if (dot > 0)
         {
             Debug.Log("Found player!");
+        }*/
+    }
+
+    // Enemy collision with player
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Player")
+        {
+            Debug.Log("Player detected, initiating attack!");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.name == "Player")
+        {
+            Debug.Log("Player out of range, returning to patrol");
         }
     }
 }
