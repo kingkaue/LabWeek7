@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 rbTarget;
     private GameObject player;
+    private NavMeshAgent m_Agent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,6 +17,7 @@ public class EnemyMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rbTarget = point1.transform.position;
         player = GameObject.FindGameObjectWithTag("Player");
+        m_Agent = GetComponent<NavMeshAgent>(); 
     }
 
     // Update is called once per frame
@@ -47,6 +50,7 @@ public class EnemyMovement : MonoBehaviour
         if(other.name == "Player")
         {
             Debug.Log("Player detected, initiating attack!");
+            m_Agent.destination = player.transform.position;
         }
     }
 
