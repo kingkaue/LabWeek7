@@ -9,7 +9,11 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 rbTarget;
     private GameObject player;
+
     private NavMeshAgent m_Agent;
+    public Transform[] waypoints;
+    private int currentLocation = 0;
+    private bool chasingPlayer = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,7 +27,18 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Enemy movement
+        //Enemy movement week 7
+        if (!chasingPlayer && !m_Agent.pathPending && m_Agent.remainingDistance < 0.2f)
+        {
+            MoveToNextLocation();
+        }
+
+        if (chasingPlayer)
+        {
+            m_Agent.SetDestination(player.transform.position);
+        }
+
+        /*
         Vector3 direction = (rbTarget - rb.position).normalized;
         Debug.DrawRay(rb.position, direction * 2, Color.magenta);
         rb.linearVelocity = direction * speed;
@@ -31,6 +46,7 @@ public class EnemyMovement : MonoBehaviour
         {
             rbTarget = (rbTarget == point1.transform.position) ? point2.transform.position : point1.transform.position;
         }
+        */
 
         /*//Interaction with player
         gameObject.transform.forward = direction;
@@ -44,12 +60,24 @@ public class EnemyMovement : MonoBehaviour
         }*/
     }
 
+    void MoveToNextLocation()
+    {
+        if (waypoints.Length == 0)
+        {
+            return;
+        }
+
+        m_Agent.SetDestination(waypoints[currentLocation].position);
+        currentLocation = (currentLocation + 1) % waypoints.Length;
+    }
+
     // Enemy collision with player
     void OnTriggerEnter(Collider other)
     {
         if(other.name == "Player")
         {
             Debug.Log("Player detected, initiating attack!");
+            chasingPlayer = true;
             m_Agent.destination = player.transform.position;
         }
     }
@@ -59,6 +87,8 @@ public class EnemyMovement : MonoBehaviour
         if(other.name == "Player")
         {
             Debug.Log("Player out of range, returning to patrol");
+            chasingPlayer = false;
+            MoveToNextLocation();
         }
     }
 }
